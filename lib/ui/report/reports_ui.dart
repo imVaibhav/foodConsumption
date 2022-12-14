@@ -58,8 +58,19 @@ class _ReportsState extends State<Reports> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              'Report for ${state.report.user.fName} ${state.report.user.lName}'),
+                          RichText(
+                            text: TextSpan(
+                                text: 'Report for ',
+                                style: TextStyle(color: Colors.black),
+                                children: [
+                                  TextSpan(
+                                      text:
+                                          '${state.report.user.fName} ${state.report.user.lName}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black))
+                                ]),
+                          ),
                           Text('Total fine: $totalFinedAmt',
                               style: TextStyle(
                                 color: totalFinedAmt > 0
@@ -98,6 +109,28 @@ class _ReportsState extends State<Reports> {
     );
   }
 
+  Widget colorCodedStatus(String status) {
+    if (status == null)
+      return Text('NA');
+    else if (status == 'Canceled')
+      return Text(
+        status,
+        style: TextStyle(color: Colors.red),
+      );
+    else if (status == 'Delivered')
+      return Text(
+        status,
+        style: TextStyle(color: Colors.green),
+      );
+    else if (status == 'Pending')
+      return Text(
+        status,
+        style: TextStyle(color: Colors.blue),
+      );
+    else
+      return Text(status);
+  }
+
   Widget _buildDayCard(Report dayReport) {
     var finedAmt = _repo.calculateOneDay(dayReport.optIns);
     return Container(
@@ -126,21 +159,21 @@ class _ReportsState extends State<Reports> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('BreakFast: '),
-                  Text(dayReport?.optIns?.breakfast ?? 'NA'),
+                  colorCodedStatus(dayReport?.optIns?.breakfast),
                 ],
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('Lunch: '),
-                  Text(dayReport?.optIns?.lunch ?? 'NA'),
+                  colorCodedStatus(dayReport?.optIns?.lunch),
                 ],
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('Dinner: '),
-                  Text(dayReport?.optIns?.dinner ?? 'NA'),
+                  colorCodedStatus(dayReport?.optIns?.dinner),
                 ],
               ),
             ],
